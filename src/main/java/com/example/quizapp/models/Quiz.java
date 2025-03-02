@@ -15,6 +15,6 @@ public class Quiz {
     private String title;
 
     @ManyToMany
-    // many to many -> multiple quiz can contain multiple quesitons
+    // many to many -> A quiz contains multiple questions, and a question can be part of multiple quizzes. This forms a many-to-many relationship because:
     private List<Question> questions;
 }
