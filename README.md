@@ -2,6 +2,18 @@
 
 DATABASE(mysql) for this project: `questiondb`
 
+### To Create DB and USE it.
+```
+# create db
+create database questiondb
+
+# view db
+show questiondb
+
+# use db
+use questiondb
+```
+
 ### To Create Table
 
 ```CREATE TABLE Question (
