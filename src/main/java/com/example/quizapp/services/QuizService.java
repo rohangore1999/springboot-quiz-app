@@ -5,14 +5,13 @@ import com.example.quizapp.dao.QuizDAO;
 import com.example.quizapp.models.Question;
 import com.example.quizapp.models.QuestionWrapper;
 import com.example.quizapp.models.Quiz;
+import com.example.quizapp.models.ResponseObj.ResponseObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class QuizService {
@@ -53,5 +52,31 @@ public class QuizService {
         }
 
         return new ResponseEntity<>(questionsToUser, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Integer> submitQuiz(Integer id, List<ResponseObj> responses) {
+        Quiz quiz = quizDao.findById(id).get();
+        List<Question> questions = quiz.getQuestions();
+
+        // Map questions and their correct answers for quick lookup
+        Map<String, String> correctAnswersMap = new HashMap<>();
+        for (Question question : questions) {
+            correctAnswersMap.put(String.valueOf(question.getId()), question.getRightAnswer());  // Assuming questions have unique IDs
+        }
+
+        int right = 0;
+
+        // Iterate through each response and check if it matches the correct answer
+        for (ResponseObj responseObj : responses) {
+            String questionId = String.valueOf(responseObj.getId());  // Assuming ResponseObj has a questionId field
+            String responseAnswer = responseObj.getResponse();
+
+            // Check if the response matches the correct answer for the corresponding question
+            if (correctAnswersMap.containsKey(questionId) && correctAnswersMap.get(questionId).equals(responseAnswer)) {
+                right++;
+            }
+        }
+
+        return new ResponseEntity<>(right, HttpStatus.OK);
     }
 }
